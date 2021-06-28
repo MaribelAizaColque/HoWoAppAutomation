@@ -1,0 +1,137 @@
+[
+  {
+    "line": 2,
+    "elements": [
+      {
+        "start_timestamp": "2021-06-28T15:37:12.734Z",
+        "line": 18,
+        "name": "Verify that the user cannot enter incorrect data",
+        "description": "",
+        "id": "howo-app-login-form;verify-that-the-user-cannot-enter-incorrect-data;;2",
+        "type": "scenario",
+        "keyword": "Scenario Outline",
+        "steps": [
+          {
+            "result": {
+              "duration": 59656000000,
+              "status": "passed"
+            },
+            "line": 7,
+            "name": "that the user enters incorrect information",
+            "match": {
+              "location": "definedSteps.LoginStep.thatTheUserEntersIncorrectInformation()"
+            },
+            "keyword": "Given "
+          },
+          {
+            "result": {
+              "duration": 2183000000,
+              "status": "passed"
+            },
+            "line": 8,
+            "name": "click the Login button",
+            "match": {
+              "location": "definedSteps.LoginStep.theUserClickDropdown()"
+            },
+            "keyword": "When "
+          },
+          {
+            "result": {
+              "duration": 5512000000,
+              "status": "passed"
+            },
+            "line": 9,
+            "name": "the system should display a warning message",
+            "match": {
+              "location": "definedSteps.LoginStep.theSystemShouldDisplayAWarningMessage()"
+            },
+            "keyword": "Then "
+          },
+          {
+            "result": {
+              "duration": 126000000,
+              "status": "passed"
+            },
+            "line": 11,
+            "name": "user enters his juan1yopmail",
+            "match": {
+              "arguments": [
+                {
+                  "val": "juan1yopmail",
+                  "offset": 16
+                }
+              ],
+              "location": "definedSteps.LoginStep.userEntersHisEmail(java.lang.String)"
+            },
+            "keyword": "And "
+          },
+          {
+            "result": {
+              "duration": 70000000,
+              "status": "passed"
+            },
+            "line": 12,
+            "name": "user enters the password1",
+            "match": {
+              "arguments": [
+                {
+                  "val": "password1",
+                  "offset": 16
+                }
+              ],
+              "location": "definedSteps.LoginStep.userEntersThePassword(java.lang.String)"
+            },
+            "keyword": "And "
+          },
+          {
+            "result": {
+              "duration": 137000000,
+              "status": "passed"
+            },
+            "line": 13,
+            "name": "user click login button",
+            "match": {
+              "location": "definedSteps.LoginStep.userClickSubmitButton()"
+            },
+            "keyword": "And "
+          },
+          {
+            "result": {
+              "duration": 344000000,
+              "status": "passed"
+            },
+            "line": 14,
+            "name": "verify that display the warning message",
+            "match": {
+              "location": "definedSteps.LoginStep.verifythatdisplaythewarningmessage()"
+            },
+            "keyword": "And "
+          },
+          {
+            "result": {
+              "duration": 1352000000,
+              "status": "passed"
+            },
+            "line": 15,
+            "name": "driver close",
+            "match": {
+              "location": "definedSteps.LoginStep.driverClose()"
+            },
+            "keyword": "And "
+          }
+        ],
+        "tags": [
+          {
+            "name": "@regression"
+          }
+        ]
+      }
+    ],
+    "name": "howo-app Login Form",
+    "description": "",
+    "id": "howo-app-login-form",
+    "keyword": "Feature",
+    "uri": "file:src/test/resources/features/Login.feature",
+    "tags": []
+  }
+]

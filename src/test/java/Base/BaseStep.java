@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 
+@SuppressWarnings("ALL")
 public class BaseStep {
     public WebDriver driver;
 
@@ -18,8 +19,16 @@ public class BaseStep {
             case CHROME_WIN:
                 System.setProperty("webdriver.chrome.driver", pathOfDrivers+"chromedriver.exe");
                 ChromeOptions chromeOptions= new ChromeOptions();
+//                chromeOptions.setBinary(pathOfDrivers+"chromedriver.exe");
+//                chromeOptions.setExperimentalOption("useAutomationExtension", false);
                 driver = new ChromeDriver(chromeOptions);
                 driver.manage().window().maximize();
+
+//                WebDriverManager.chromedriver().setup();
+//                driver = new ChromeDriver();
+//                System.setProperty("webdriver.chrome.logfile", "./logs/chromeLogs.txt");
+//                driver.manage().window().maximize();
+//                break;
         }
     }
     public enum browserType {
@@ -58,7 +67,7 @@ public class BaseStep {
     }
     public void geturl()
     {
-    driver.get("https://howo-app.herokuapp.com/");
+        driver.get("https://howo-app.herokuapp.com/");
     }
 
     public void waitElement(WebElement element, TimeOut timeOut) {
@@ -209,4 +218,4 @@ public class BaseStep {
     }
     public void DriverQuit() {
         driver.quit(); }
-    }
+}
