@@ -1,201 +1,92 @@
 package Base;
 
+import Common.DriverClass;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 
 public class BaseStep {
     public WebDriver driver;
-
-    public BaseStep()
-    {
-        String pathOfDrivers = System.getProperty("user.dir")+"\\src\\test\\java\\driver\\";
-        browserType type= browserType.CHROME_WIN;
-        switch (type){
-            case CHROME_WIN:
-                System.setProperty("webdriver.chrome.driver", pathOfDrivers+"chromedriver.exe");
-                ChromeOptions chromeOptions= new ChromeOptions();
-                driver = new ChromeDriver(chromeOptions);
-                driver.manage().window().maximize();
-        }
+    public String url = "";
+    public WebDriver getWebDriver() {
+        return DriverClass.driver;
     }
-    public enum browserType {
-        FIREFOX_WIN,
-        CHROME_WIN,
-        FIREFOX_MAC,
-        CHROME_MAC,
-        IE,     //not implemented
-        SAFARI  //not implemented
-    }
-    public enum Pather {
-        id,
-        className,
-        name,
-        xPath,
-        cssSelector,
-        linkText
-    }
-
-    public enum TimeOut {
-        LOW(5),
-        MIDDLE(10),
-        HIGH(15),
-        CUSTOM_MAX(60);
-        private final int value;
-
-        public int getValue() {
-            return value;
-        }
-
-        // enum constructor - cannot be public or protected
-        private TimeOut(int value) {
-            this.value = value;
-        }
-
-    }
-    public void geturl()
-    {
-    driver.get("https://howo-app.herokuapp.com/");
-    }
-
-    public void waitElement(WebElement element, TimeOut timeOut) {
-
+    @BeforeClass
+    public void initializeTestBase()throws InterruptedException{
+        String browser="";
+        Properties property=new Properties();
+        String proFileName="/cucumber.properties";
+        InputStream inputStream= getClass().getResourceAsStream(proFileName);
         try {
-            WebDriverWait wait = new WebDriverWait(driver, timeOut.value);
-            wait.until(ExpectedConditions.invisibilityOf(element));
-        } catch (Exception ex) {
-
+            if(inputStream!=null){
+                property.load(inputStream);
+                browser=System.getProperty("Browser")!=null? System.getProperty("Browser"): property.getProperty("browser");
+                url= property.getProperty("ServerPath");
+                setDriver(browser,url);
+            }else{
+                    throw new FileNotFoundException("the file is not found");
+                }
+        }catch (IOException e){
+            e.getMessage();
         }
-
     }
-    public void findElementButtonClick(String path, Pather type) {
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, TimeOut.MIDDLE.value);
-            switch (type) {
-                case className:
-                    wait.until(ExpectedConditions.elementToBeClickable(By.className(path))).click();
+
+    private void setDriver(String browser, String url) {
+        if(DriverClass.driver==null){
+            switch (browser) {
+                case "chrome":
+                    DriverClass.driver = initChromeDriver(url);
                     break;
-                case id:
-                    wait.until(ExpectedConditions.elementToBeClickable(By.id(path))).click();
+                case "firefox":
+                    DriverClass.driver = initFirefoxDriver(url);
                     break;
-                case name:
-                    wait.until(ExpectedConditions.elementToBeClickable(By.name(path))).click();
-                    break;
-                case xPath:
-                    wait.until(ExpectedConditions.elementToBeClickable(By.xpath(path))).click();
-                    break;
-                case cssSelector:
-                    wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(path))).click();
-                    break;
-                case linkText:
-                    wait.until(ExpectedConditions.elementToBeClickable(By.linkText(path))).click();
-                    break;
-                default:
-                    new NotFoundException();
+
             }
+        }else{
+            DriverClass.driver.get(url);
 
-        } catch (Exception ex) { }
-    }
-    public void findElementClick(String path, Pather type) {
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, TimeOut.MIDDLE.value);
-            switch (type) {
-                case className:
-                    wait.until(ExpectedConditions.elementToBeClickable(By.className(path))).sendKeys(Keys.ENTER);
-                    break;
-                case id:
-                    wait.until(ExpectedConditions.elementToBeClickable(By.id(path))).sendKeys(Keys.ENTER);
-                    break;
-                case name:
-                    wait.until(ExpectedConditions.elementToBeClickable(By.name(path))).sendKeys(Keys.ENTER);
-                    break;
-                case xPath:
-                    wait.until(ExpectedConditions.elementToBeClickable(By.xpath(path))).sendKeys(Keys.ENTER);
-                    break;
-                case cssSelector:
-                    wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(path))).sendKeys(Keys.ENTER);
-                    break;
-                case linkText:
-                    wait.until(ExpectedConditions.elementToBeClickable(By.linkText(path))).sendKeys(Keys.ENTER);
-                    break;
-                default:
-                    new NotFoundException();
-            }
 
-        } catch (Exception ex) { }
-    }
-    public WebElement findElement(String path, Pather type,TimeOut timeOut) {
-
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, timeOut.value);
-            WebElement element = null;
-            switch (type) {
-                case className:
-                    element = wait.until(ExpectedConditions.presenceOfElementLocated(By.className(path)));
-                    break;
-                case id:
-                    element = wait.until(ExpectedConditions.presenceOfElementLocated(By.id(path)));
-                    break;
-                case name:
-                    element = wait.until(ExpectedConditions.presenceOfElementLocated(By.name(path)));
-                    break;
-                case xPath:
-                    element = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(path)));
-                    break;
-                case cssSelector:
-                    element = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(path)));
-                    break;
-                case linkText:
-                    element = wait.until(ExpectedConditions.presenceOfElementLocated(By.linkText(path)));
-                    break;
-                default:
-                    new NotFoundException();
-            }
-            return element;
-        }
-        catch (Exception ex)
-        {
-            return null;
         }
     }
 
-    public WebElement findElement(String path, Pather type, String description) {
-
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, TimeOut.MIDDLE.value);
-            WebElement element = null;
-            switch (type) {
-                case className:
-                    element = wait.until(ExpectedConditions.presenceOfElementLocated(By.className(path)));
-                    break;
-                case id:
-                    element = wait.until(ExpectedConditions.presenceOfElementLocated(By.id(path)));
-                    break;
-                case name:
-                    element = wait.until(ExpectedConditions.presenceOfElementLocated(By.name(path)));
-                    break;
-                case xPath:
-                    element = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(path)));
-                    break;
-                case cssSelector:
-                    element = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(path)));
-                    break;
-                case linkText:
-                    element = wait.until(ExpectedConditions.presenceOfElementLocated(By.linkText(path)));
-                    break;
-                default:
-                    new NotFoundException();
-            }
-            return element;
-        } catch (Exception ex) {
-            System.out.println("find element method error" + ex.getMessage());
-            return null;
+    private WebDriver initFirefoxDriver(String url) {
+        WebDriver driver;
+        if(System.getProperty("os.name").toLowerCase().contains("windows")){
+            System.setProperty("webdriver.firefox.marionette",System.getProperty("user.dir")+"\\src\\test\\java\\driver\\geckodriver.exe");
         }
+        driver = new FirefoxDriver();
+        driver.get(url);
+
+        return driver;
     }
 
+    private WebDriver initChromeDriver(String appURL) {
+        WebDriver driver;
+        if(System.getProperty("os.name").toLowerCase().contains("windows")){
+            System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir")+"\\src\\test\\java\\driver\\chromedriver.exe");
+        }
+        DesiredCapabilities cap = DesiredCapabilities.chrome();
+        cap.setCapability("applicationCacheEnabled", false);
+        driver=new ChromeDriver(cap);
+        driver.manage().deleteAllCookies();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().window().maximize();
+        driver.get(appURL);
+        return driver;
+    }
 
     public void PageScrolldown() {
         JavascriptExecutor jse = (JavascriptExecutor) driver;
@@ -203,10 +94,9 @@ public class BaseStep {
 
     }
 
-    public void PageScrollup() {
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        jse.executeScript("window.scrollBy(0,-300)", "");
+    @AfterClass
+    public void closeDriver(){
+        DriverClass.driver.close();
+        DriverClass.driver.quit();
     }
-    public void DriverQuit() {
-        driver.quit(); }
-    }
+}
